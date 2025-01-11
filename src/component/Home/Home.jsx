@@ -9,15 +9,29 @@ const Home = () => {
     setBlogList(data); 
   }
 
+  const postBlog = async()=> {
+    try {
+      
+    const response = await fetch('http://localhost:3000/api/blogs', {method:'POST',
+      headers:  { "Content-Type": "application/json" },
+      body: JSON.stringify(newBlog)
+    })
+    const data = await response.json();
+    console.log(data);
+    alert('Blog Created')
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(()=>{
     fetchBlogs();
   },[])
   return (
     <> 
-    <form>
-      <input type='text' onChange={(e)=>setNewBlog(newBlog.title)} value={newBlog.title} placeholder='Entert blog title'/>
-      <input type='text' onChange={(e)=>setNewBlog(newBlog.content)} value={newBlog.content}/>
-      <button>Submit Blog</button>
+    <form onSubmit={(e)=>{e.preventDefault();postBlog()}}>
+      <input type='text' onChange={(e)=>setNewBlog({...newBlog,title: e.target.value})} value={newBlog.title} placeholder='Entert blog title'/>
+      <input type='text' onChange={(e)=>setNewBlog({...newBlog,content: e.target.value})} value={newBlog.content} placeholder='Entert blog content'/>
+      <button type='submit'>Submit Blog</button>
     </form>
     <div>
       {

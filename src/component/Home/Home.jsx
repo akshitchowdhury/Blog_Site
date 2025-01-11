@@ -23,6 +23,17 @@ const Home = () => {
       console.log(error);
     }
   }
+
+  const handleDeleteBlog = async(id)=>{
+    try {
+      const response = await fetch(`http://localhost:3000/api/blogs/${id}`, {method:'DELETE'});
+      const data = await response.json();
+      alert('Blog Deleted')
+      setBlogList(blogList.filter((blog)=>blog._id !== id))
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(()=>{
     fetchBlogs();
   },[])
@@ -30,8 +41,9 @@ const Home = () => {
     <> 
     <form onSubmit={(e)=>{e.preventDefault();postBlog()}}>
       <input type='text' onChange={(e)=>setNewBlog({...newBlog,title: e.target.value})} value={newBlog.title} placeholder='Entert blog title'/>
-      <input type='text' onChange={(e)=>setNewBlog({...newBlog,content: e.target.value})} value={newBlog.content} placeholder='Entert blog content'/>
+      <textarea  onChange={(e)=>setNewBlog({...newBlog,content: e.target.value})} value={newBlog.content} placeholder='Entert blog content'/>
       <button type='submit'>Submit Blog</button>
+      
     </form>
     <div>
       {
@@ -40,6 +52,7 @@ const Home = () => {
             <div key={blog._id}>
               <h1>{blog.title}</h1>
               <h2>{blog.content}</h2>
+              <button onClick={()=>handleDeleteBlog(blog._id)}>Delete Blog</button>
               </div>
           </>
         ))
